@@ -25,7 +25,7 @@ impl Host {
             return Err(anyhow!("Failed to spawn hostnamectl"));
         }
         let host = from_slice::<Host>(&hostnamtctl.stdout)?;
-        return Ok(host);
+        Ok(host)
     }
 
     pub fn hostname(self) -> String {
