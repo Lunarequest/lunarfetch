@@ -3,7 +3,7 @@ use std::env::{consts::ARCH, var};
 
 use hostnamectl::Host;
 use package_managers::get_package_number;
-use utils::ps::terminal;
+use utils::{music::get_song_dbus, ps::terminal};
 mod hostnamectl;
 mod package_managers;
 mod utils;
@@ -24,7 +24,8 @@ pub fn desktop_env() -> Result<String> {
     }
 }
 
-fn main() -> Result<()> {
+#[tokio::main]
+async fn main() -> Result<()> {
     let a = get_package_number().context("Failed to get number of pakcages")?;
     let terminal = terminal()?;
     let host = Host::new()?;
@@ -35,8 +36,8 @@ fn main() -> Result<()> {
     let os = host.operating_system_pretty_name();
     let os_out = format!("{os} {ARCH}");
     let desktop = desktop_env()?;
-
-    println!("{a}\n{terminal}\n{hostname}\n{kernel_version}\n{hardware_vendor}\n{hardware_model}\n{os_out}\n{desktop}");
+    let music = get_song_dbus().await?;
+    println!("{a}\n{terminal}\n{hostname}\n{kernel_version}\n{hardware_vendor}\n{hardware_model}\n{os_out}\n{desktop}\n{music}");
 
     Ok(())
 }
