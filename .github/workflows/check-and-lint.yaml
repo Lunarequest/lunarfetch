@@ -17,6 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
       - run: sudo apt install -y mold
       - run: cargo check
 
@@ -39,7 +40,7 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-      - uses: Swatinem/rust-cache@v1
+      - uses: Swatinem/rust-cache@v2
       - run: sudo apt install -y mold
       - run: cargo clippy
       - run: cargo clippy --no-default-features --features posix
