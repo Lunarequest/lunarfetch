@@ -12,8 +12,6 @@ pub struct Host {
     operating_system_pretty_name: String,
     #[serde(rename = "KernelRelease")]
     kernel_release: String,
-    #[serde(rename = "HardwareVendor")]
-    hardware_vendor: String,
     #[serde(rename = "HardwareModel")]
     hardware_model: String,
 }
@@ -33,10 +31,6 @@ impl Host {
     }
     pub fn kernel_release(self) -> String {
         self.kernel_release
-    }
-
-    pub fn hardware_vendor(self) -> String {
-        self.hardware_vendor
     }
 
     pub fn hardware_model(self) -> String {

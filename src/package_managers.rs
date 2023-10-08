@@ -27,7 +27,7 @@ pub fn get_package_number() -> Result<String> {
 
     if which("emerge").is_some() {
         let walker = WalkDir::new("/var/db/pkg/").into_iter();
-        for entry in walker.filter_entry(|e| is_dir(e)) {
+        for entry in walker.filter_entry(is_dir) {
             match entry {
                 Err(_) => continue,
                 Ok(_) => emerge_number += 1,
@@ -58,8 +58,8 @@ pub fn get_package_number() -> Result<String> {
     out.push(')');
 
     Ok(format!(
-        "{}: {}",
-        out,
-        emerge_number + rpm_number + flatpak_number
+        "{} {}",
+        emerge_number + rpm_number + flatpak_number,
+        out
     ))
 }

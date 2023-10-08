@@ -40,11 +40,14 @@ pub async fn get_song_dbus() -> Result<String> {
 
     if filtered_m.len() > 1 {
         for bus in filtered_m {
-            let music = music_from_bus(bus, connection).await?;
-            return Ok(music);
+            let music = music_from_bus(bus, connection.clone()).await?;
+            if music.len() > 2 {
+                // simple check to iterate through all buses
+                return Ok(music);
+            }
         }
-        return Ok("".to_string());
+        Ok("Unknown Artist - Unknown Album - Unknown Song".to_string())
     } else {
-        return Ok("".to_string());
+        Ok("Unknown Artist - Unknown Album - Unknown Song".to_string())
     }
 }
