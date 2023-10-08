@@ -1,4 +1,4 @@
-use super::utils::which::which;
+use super::which::which;
 use anyhow::Result;
 use std::process::Command;
 use walkdir::{DirEntry, WalkDir};

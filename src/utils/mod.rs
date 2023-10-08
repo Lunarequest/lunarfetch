@@ -1,4 +1,6 @@
+pub mod hostname;
 pub mod music;
+pub mod package_managers;
 pub mod ps;
 pub mod which;
 mod whitespace;

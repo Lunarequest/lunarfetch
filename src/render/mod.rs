@@ -1,53 +1,15 @@
-use crate::{hostnamectl::Host, terminal, utils::desktop_env};
-
-use std::env::{self, consts::ARCH};
-
-use anyhow::{Context, Result};
-use owo_colors::{AnsiColors, OwoColorize};
+mod squares;
+use crate::{
+    terminal,
+    utils::{desktop_env, hostname::Host},
+};
+use owo_colors::OwoColorize;
 use pretty_duration::pretty_duration;
+use squares::gen_colored_squares;
+use std::env::{self, consts::ARCH};
 use uptime_lib::get;
 
-fn gen_colored_squares() -> String {
-    let block_width = 3;
-
-    let block = " ".repeat(block_width);
-
-    let row_1_colors = [
-        AnsiColors::Black,
-        AnsiColors::Red,
-        AnsiColors::Green,
-        AnsiColors::Blue,
-        AnsiColors::Yellow,
-        AnsiColors::Magenta,
-        AnsiColors::Cyan,
-        AnsiColors::White,
-    ];
-
-    let row_2_colors = [
-        AnsiColors::BrightBlack,
-        AnsiColors::BrightRed,
-        AnsiColors::BrightGreen,
-        AnsiColors::BrightBlue,
-        AnsiColors::BrightYellow,
-        AnsiColors::BrightMagenta,
-        AnsiColors::BrightCyan,
-        AnsiColors::BrightWhite,
-    ];
-    let padding = " ".repeat(45);
-    let mut row1 = String::new();
-    let mut row2 = String::new();
-
-    for color in row_1_colors {
-        let colored_block = block.on_color(color).to_string();
-        row1.push_str(&colored_block);
-    }
-    for color in row_2_colors {
-        let colored_block = block.on_color(color).to_string();
-        row2.push_str(&colored_block);
-    }
-
-    format!("{padding}{row1}\n{padding}{row2}")
-}
+use anyhow::{Context, Result};
 
 pub async fn render(packages: String, host: Host, music: String) -> Result<()> {
     let desktop = desktop_env()?;

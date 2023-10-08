@@ -1,14 +1,17 @@
 use anyhow::Result;
 use std::thread::spawn;
 
-use hostnamectl::Host;
-use logo::render;
-use package_managers::get_package_number;
-use utils::{music::get_song_dbus, ps::terminal};
-mod hostnamectl;
-mod logo;
-mod package_managers;
+use render::render;
+use utils::{
+    hostname::Host, music::get_song_dbus, package_managers::get_package_number, ps::terminal,
+};
+mod render;
 mod utils;
+
+#[cfg(all(feature = "systemd", feature = "posix"))]
+compile_error!(
+    "systemd and posix mode are mutually exclusive pick only one backend, systemd is faster"
+);
 
 #[tokio::main]
 async fn main() -> Result<()> {
