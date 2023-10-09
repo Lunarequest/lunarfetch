@@ -3,7 +3,6 @@ pub mod music;
 pub mod package_managers;
 pub mod ps;
 pub mod which;
-mod whitespace;
 
 use anyhow::{anyhow, Result};
 use std::env::var;

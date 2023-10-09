@@ -1,13 +1,13 @@
-use super::whitespace::remove_whitespace;
 use anyhow::{anyhow, Result};
 use std::{
-    fs::read_to_string,
-    process::{id, Command},
+    fs::{read_to_string, File},
+    io::{BufRead, BufReader},
+    process::id,
 };
 
 pub fn terminal() -> Result<String> {
     let pid = id();
-    let pids = get_parent_pid(pid);
+    let pids = get_parent_pids(pid)?;
     if pids.is_empty() {
         return Err(anyhow!("fiailed to get parent pid for terminal detection"));
     }
@@ -27,28 +27,35 @@ pub fn terminal() -> Result<String> {
     ))
 }
 
-fn get_parent_pid(pid: u32) -> Vec<u32> {
-    let mut pids: Vec<u32> = Vec::new();
-    let ret = Command::new("ps")
-        .arg("-o")
-        .arg(format!("ppid={}", pid))
-        .output();
-    if ret.is_err() {
-        return pids;
-    }
+fn get_parent_pid(pid: u32) -> Result<u32> {
+    let file = File::open(format!("/proc/{}/status", pid))?;
+    let reader = BufReader::new(file);
 
-    let output = String::from_utf8_lossy(&ret.unwrap().stdout).to_string();
-    for pid in output.split('\n') {
-        let pid = remove_whitespace(pid);
-        match pid.parse::<u32>() {
-            Ok(p) => pids.push(p),
-            Err(_) => break,
+    for line in reader.lines() {
+        let line = line?;
+        if line.starts_with("PPid:") {
+            let ppid: u32 = line[6..].trim().parse().unwrap();
+            return Ok(ppid);
         }
     }
-    pids
+
+    Err(anyhow!("PPid not found"))
+}
+
+fn get_parent_pids(pid: u32) -> Result<Vec<u32>> {
+    let mut pids = Vec::new();
+    let mut current_pid = pid;
+
+    while current_pid != 1 {
+        let ppid = get_parent_pid(current_pid)?;
+        pids.push(ppid);
+        current_pid = ppid;
+    }
+
+    Ok(pids)
 }
 
 fn get_pid_name(pid: &u32) -> Result<String> {
     let name = read_to_string(format!("/proc/{pid}/comm"))?;
-    Ok(remove_whitespace(&name))
+    Ok(name.trim().to_string())
 }
