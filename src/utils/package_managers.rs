@@ -1,11 +1,6 @@
 use super::which::which;
 use anyhow::Result;
-use std::process::Command;
-use walkdir::{DirEntry, WalkDir};
-
-fn is_dir(entry: &DirEntry) -> bool {
-    entry.path().is_dir()
-}
+use std::{process::Command, fs::read_dir};
 
 pub fn get_package_number() -> Result<String> {
     let mut rpm_number = 0;
@@ -26,11 +21,25 @@ pub fn get_package_number() -> Result<String> {
     }
 
     if which("emerge").is_some() {
-        let walker = WalkDir::new("/var/db/pkg/").into_iter();
-        for entry in walker.filter_entry(is_dir) {
+        let walker = read_dir("/var/db/pkg/")?;
+        for entry in walker {
             match entry {
                 Err(_) => continue,
-                Ok(_) => emerge_number += 1,
+                Ok(dir) => {
+                    if dir.path().is_dir() {
+                        let subwalker = read_dir(format!("/var/db/pkg/{}", dir.file_name().to_string_lossy()))?;
+                        for subdir in subwalker {
+                            match subdir {
+                                Err(_) => continue,
+                                Ok(sub_subfile) => {
+                                    if sub_subfile.path().is_dir() {
+                                        emerge_number+=1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
             }
         }
         if emerge_number > 0 {
