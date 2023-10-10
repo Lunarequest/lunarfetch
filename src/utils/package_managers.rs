@@ -1,6 +1,6 @@
 use super::which::which;
 use anyhow::Result;
-use std::{process::Command, fs::read_dir};
+use std::{fs::read_dir, process::Command};
 
 pub fn get_package_number() -> Result<String> {
     let mut rpm_number = 0;
@@ -27,21 +27,23 @@ pub fn get_package_number() -> Result<String> {
                 Err(_) => continue,
                 Ok(dir) => {
                     if dir.path().is_dir() {
-                        let subwalker = read_dir(format!("/var/db/pkg/{}", dir.file_name().to_string_lossy()))?;
+                        let subwalker =
+                            read_dir(format!("/var/db/pkg/{}", dir.file_name().to_string_lossy()))?;
                         for subdir in subwalker {
                             match subdir {
                                 Err(_) => continue,
                                 Ok(sub_subfile) => {
                                     if sub_subfile.path().is_dir() {
-                                        emerge_number+=1;
+                                        emerge_number += 1;
                                     }
                                 }
                             }
                         }
                     }
-                },
+                }
             }
         }
+
         if emerge_number > 0 {
             if out == "(" {
                 out.push_str("emerge");
