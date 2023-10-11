@@ -3,7 +3,7 @@ use anyhow::Result;
 use {anyhow::anyhow, serde::Deserialize, serde_json::from_slice, std::process::Command};
 
 #[cfg(feature = "posix")]
-use {super::whitespace::remove_whitespace, std::fs::read_to_string};
+use std::fs::read_to_string;
 
 #[cfg(feature = "systemd")]
 #[derive(Debug, Clone, Deserialize)]
@@ -42,8 +42,7 @@ impl Host {
         use sys_info::{hostname, linux_os_release};
         use uname::Info;
 
-        let hardware_model =
-            remove_whitespace(&read_to_string("/sys/devices/virtual/dmi/id/board_name")?);
+        let hardware_model = &read_to_string("/sys/devices/virtual/dmi/id/board_name")?.trim();
         let hostname = hostname()?;
         let info = linux_os_release()?;
         let uname = Info::new()?;

@@ -10,12 +10,13 @@ pub fn get_package_number() -> Result<String> {
     let mut out = String::from("(");
     if which("rpm").is_some() {
         let rpm_out = Command::new("rpm").arg("-qa").output()?;
-        let output = String::from_utf8_lossy(&rpm_out.stdout).to_string();
+        let output = String::from_utf8_lossy(&rpm_out.stdout);
         rpm_number = output.lines().count();
         if rpm_number > 0 {
             if out == "(" {
                 out.push_str("rpm");
             } else {
+                out.push_str(", rpm");
             }
         }
     }
@@ -48,33 +49,33 @@ pub fn get_package_number() -> Result<String> {
             if out == "(" {
                 out.push_str("emerge");
             } else {
-                out.push_str(",emerge");
+                out.push_str(", emerge");
             }
         }
     }
 
     if which("brew").is_some() {
         let brew_out = Command::new("brew").args(["list", "-l"]).output()?;
-        let output = String::from_utf8_lossy(&brew_out.stdout).to_string();
+        let output = String::from_utf8_lossy(&brew_out.stdout);
         brew = output.lines().count() - 1;
         if brew > 0 {
             if out == "(" {
                 out.push_str("brew");
             } else {
-                out.push_str(",brew");
+                out.push_str(", brew");
             }
         }
     }
 
     if which("flatpak").is_some() {
         let flatpak_out = Command::new("flatpak").arg("list").output()?;
-        let output = String::from_utf8_lossy(&flatpak_out.stdout).to_string();
+        let output = String::from_utf8_lossy(&flatpak_out.stdout);
         flatpak_number = output.lines().count() - 1;
         if flatpak_number > 0 {
             if out == "(" {
                 out.push_str("flatpak");
             } else {
-                out.push_str(",flatpak");
+                out.push_str(", flatpak");
             }
         }
     }
@@ -84,6 +85,6 @@ pub fn get_package_number() -> Result<String> {
     Ok(format!(
         "{} {}",
         emerge_number + rpm_number + flatpak_number + brew,
-        out
+        out.trim()
     ))
 }
