@@ -18,6 +18,7 @@ pub fn terminal() -> Result<String> {
             "code-insiders" => return Ok(String::from("vscode insiders")),
             "konsole" => return Ok(String::from("konsole")),
             "kitty" => return Ok(String::from("kitty")),
+            "sshd" => return Ok(String::from("ssh")),
             _ => continue,
         }
     }
