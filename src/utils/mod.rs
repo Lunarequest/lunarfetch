@@ -10,11 +10,7 @@ use std::env::var;
 pub fn desktop_env() -> Result<String> {
     let desktop = match var("XDG_CURRENT_DESKTOP") {
         Ok(de) => de,
-        Err(e) => {
-            return Err(anyhow!(
-                "{e}\nXDG_CURRENT_DESKTOP not set failed to determain desktop env"
-            ))
-        }
+        Err(_e) => return Ok("HEADLESS".to_string()),
     };
 
     match desktop.as_ref() {
