@@ -3,10 +3,6 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nil = {
-      url = "github:oxalica/nil";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +17,6 @@
   outputs = {
     self,
     nixpkgs,
-    nil,
     rust-overlay,
     flake-utils,
     naersk,
@@ -40,6 +35,7 @@
             pkgs.nil
             rust-bin.beta.latest.default
             pkgs.rust-analyzer
+            pkgs.nil
           ];
           shellHook = ''
             test ~/.zshrc && exec zsh
