@@ -33,7 +33,7 @@
           buildInputs = with pkgs; [
             pkgs.zsh
             pkgs.nil
-            rust-bin.beta.latest.default
+            rust-bin.stable.latest.default
             pkgs.rust-analyzer
             pkgs.nil
           ];
