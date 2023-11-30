@@ -14,11 +14,11 @@ posix = ["dep:sys-info", "dep:uname"]
 anyhow = "1.0.75"
 owo-colors = { version = "3.5.0", features = ["supports-colors"] }
 pretty-duration = "0.1.1"
-serde = { version = "1.0.190", optional = true, features = ["derive"] }
-serde_json = { version = "1.0.107", optional = true }
+serde = { version = "1.0.193", optional = true, features = ["derive"] }
+serde_json = { version = "1.0.108", optional = true }
 sys-info = {version = "0.9.1", optional = true}
-tokio = { version = "1.33.0", features = ["full"] }
+tokio = { version = "1.34.0", features = ["full"] }
 uname = {version = "0.1.1", optional = true}
-uptime_lib = "0.2.2"
+uptime_lib = "0.3.0"
 zbus = { version = "3.14.1", features = ["tokio"] }
 zvariant = "3.15.0"
