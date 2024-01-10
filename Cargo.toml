@@ -1,6 +1,6 @@
 [package]
 name = "lunarfetch"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 resolver = "2"
 
@@ -14,7 +14,7 @@ posix = ["dep:sys-info", "dep:uname"]
 anyhow = "1.0.79"
 owo-colors = { version = "4.0.0" }
 pretty-duration = "0.1.1"
-serde = { version = "1.0.194", optional = true, features = ["derive"] }
+serde = { version = "1.0.195", optional = true, features = ["derive"] }
 serde_json = { version = "1.0.111", optional = true }
 sys-info = { version = "0.9.1", optional = true }
 tokio = { version = "1.35.1", features = ["full"] }
