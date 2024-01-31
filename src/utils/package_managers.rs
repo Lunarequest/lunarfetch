@@ -74,7 +74,7 @@ pub fn get_package_number() -> Result<String> {
                 .args(["-q", "--requisites", "/run/current-system/sw"])
                 .output()?;
             let output = String::from_utf8_lossy(&nix_system_out.stdout);
-            nix = nix + output.lines().count();
+            nix += output.lines().count();
             if nix > 0 {
                 if out == "(" {
                     out.push_str("nix-system");
@@ -93,7 +93,7 @@ pub fn get_package_number() -> Result<String> {
                 ])
                 .output()?;
             let output = String::from_utf8_lossy(&nix_user_out.stdout);
-            nix = nix + output.lines().count();
+            nix += output.lines().count();
             if nix > 0 {
                 if out == "(" {
                     out.push_str("nix-user");
@@ -108,7 +108,7 @@ pub fn get_package_number() -> Result<String> {
                 .args(["-q", "--requisites", "/nix/var/nix/profiles/default"])
                 .output()?;
             let output = String::from_utf8_lossy(&nix_default_out.stdout);
-            nix = nix + output.lines().count();
+            nix += output.lines().count();
             if nix > 0 {
                 if out == "(" {
                     out.push_str("nix-defualt");

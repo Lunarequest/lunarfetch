@@ -8,15 +8,18 @@ resolver = "2"
 [features]
 default = ["systemd"]
 systemd = ["dep:serde", "dep:serde_json"]
-posix = ["dep:sys-info", "dep:uname"]
+posix = ["dep:uname"]
 
 [dependencies]
 anyhow = "1.0.79"
+byte-unit = "5.1.4"
 owo-colors = { version = "4.0.0" }
 pretty-duration = "0.1.1"
-serde = { version = "1.0.195", optional = true, features = ["derive"] }
-serde_json = { version = "1.0.111", optional = true }
+procfs = "0.16.0"
+serde = { version = "1.0.196", optional = true, features = ["derive"] }
+serde_json = { version = "1.0.113", optional = true }
 sys-info = { version = "0.9.1", optional = true }
+sysinfo = "0.30.5"
 tokio = { version = "1.35.1", features = ["full"] }
 uname = { version = "0.1.1", optional = true }
 uptime_lib = "0.3.0"

@@ -11,7 +11,13 @@ use uptime_lib::get;
 
 use anyhow::{Context, Result};
 
-pub async fn render(packages: String, host: Host, music: String) -> Result<()> {
+pub async fn render(
+    packages: String,
+    host: Host,
+    music: String,
+    cpu: String,
+    ram: String,
+) -> Result<()> {
     let desktop = desktop_env()?;
     let terminal = terminal()?;
     let user = env::var("USER")?;
@@ -39,7 +45,8 @@ pub async fn render(packages: String, host: Host, music: String) -> Result<()> {
              {} {} -> {}
               {} {} -> {}
               {} {} -> {}
-              {}
+              {} {} -> {}
+{}  {} -> {}
 ",
         "▀▀▀▀▀▀▀".bright_red(),
         "▀▀▀▀▀▀▀▀▀▘".white(),
@@ -94,6 +101,11 @@ pub async fn render(packages: String, host: Host, music: String) -> Result<()> {
         "Song".purple(),
         music,
         "▐▌ █  ▜▄█ █ █ ▗▄▛ █  ▝▙▟▌▝▙▟▌".white(),
+        "CPU".purple(),
+        cpu,
+        "                                          ",
+        "Memory".purple(),
+        ram
     );
     println!("{logo}");
     println!("{blocks}");
