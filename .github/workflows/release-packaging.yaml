@@ -17,16 +17,17 @@ jobs:
       PROJECT_NAME: lunarfetch
     runs-on: ubuntu-latest
     container:
-      image: rust:alpine
+      image: alpine:edge
     strategy:
       fail-fast: true
       matrix:
-        target: [x86_64-unknown-linux-musl, aarch64-unknown-linux-musl]
+        target: [x86_64-unknown-linux-musl] #TODO: add support for aarch64 builds
     steps:
       - uses: actions/checkout@v4
       - name: install deps
-        run: apk update && apk upgrade && apk add musl-dev
-
+        run: apk update && apk upgrade && apk add musl-dev rustup gcc
+      - name: add toolchain
+        run: rustup-init --target ${{ matrix.target }} -y
       - uses: Swatinem/rust-cache@v2
 
       - name: Release Build
