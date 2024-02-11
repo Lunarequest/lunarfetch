@@ -31,13 +31,13 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: Release Build
-        run: cargo build --release --target ${{ matrix.target }}
+        run: . $HOME/.cargo/env && cargo build --release --target ${{ matrix.target }}
 
       - uses: actions/upload-artifact@v3
         if: github.ref == 'refs/heads/mistress'
         with:
           name: ${{ env.PROJECT_NAME }}-${{ matrix.target }}
-          path: target/release/${{ matrix.target }}/${{ env.PROJECT_NAME }}
+          path: target/${{ matrix.target }}/release/${{ env.PROJECT_NAME }}
 
       - name: Publish
         id: publishing
@@ -45,5 +45,5 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           files: |
-            target/release/${{ matrix.target }}/${{ env.PROJECT_NAME }}
+            target/${{ matrix.target }}/release/${{ env.PROJECT_NAME }}
           draft: true
