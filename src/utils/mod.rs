@@ -1,9 +1,9 @@
+pub mod hardware;
 pub mod hostname;
 pub mod music;
 pub mod package_managers;
 pub mod ps;
 pub mod which;
-pub mod hardware;
 
 use anyhow::{anyhow, Result};
 use std::env::var;
