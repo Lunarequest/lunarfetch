@@ -8,7 +8,7 @@ resolver = "2"
 [features]
 default = ["systemd"]
 systemd = ["dep:serde", "dep:serde_json"]
-posix = ["dep:uname"]
+posix = ["dep:uname", "dep:sys-info"]
 
 [dependencies]
 anyhow = "1.0.79"

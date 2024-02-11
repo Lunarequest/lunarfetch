@@ -19,7 +19,7 @@ pub fn ram() -> String {
         - mem.s_reclaimable.unwrap_or(0);
 
     let mut percent = used_mem as f64 / total_mem as f64;
-    percent = percent * 100.0;
+    percent *= 100.0;
 
     format!(
         "{} / {} ({:.0}%)",

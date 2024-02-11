@@ -122,11 +122,7 @@ pub fn get_package_number() -> Result<String> {
     if which("flatpak").is_some() {
         let flatpak_out = Command::new("flatpak").arg("list").output()?;
         let output = String::from_utf8_lossy(&flatpak_out.stdout);
-        flatpak_number = output.lines().count();
-
-        if flatpak_number != 0 {
-            flatpak_number -= 1;
-        }
+        flatpak_number = output.lines().count().saturating_sub(1);
 
         if flatpak_number > 0 {
             if out == "(" {

@@ -51,7 +51,7 @@ impl Host {
             hostname,
             operating_system_pretty_name: info.pretty_name().to_string(),
             kernel_release: uname.release,
-            hardware_model,
+            hardware: hardware_model.to_string(),
         })
     }
 
