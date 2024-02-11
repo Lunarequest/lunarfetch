@@ -4,7 +4,7 @@ use sysinfo::System;
 
 fn print_size_in_gb(size_in_bytes: u64) -> String {
     let byte = Byte::from_u64(size_in_bytes);
-    let adjusted_byte = byte.get_adjusted_unit(Unit::GB);
+    let adjusted_byte = byte.get_adjusted_unit(Unit::GiB);
     format!("{:.2}", adjusted_byte)
 }
 
