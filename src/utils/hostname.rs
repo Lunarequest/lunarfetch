@@ -1,8 +1,6 @@
 use anyhow::Result;
 #[cfg(feature = "systemd")]
 use {anyhow::anyhow, serde::Deserialize, serde_json::from_slice, std::process::Command};
-
-#[cfg(feature = "posix")]
 use std::fs::read_to_string;
 
 #[cfg(feature = "systemd")]
@@ -34,7 +32,8 @@ impl Host {
         if !hostnamtctl.status.success() {
             return Err(anyhow!("Failed to spawn hostnamectl"));
         }
-        let host = from_slice::<Host>(&hostnamtctl.stdout)?;
+        let mut host = from_slice::<Host>(&hostnamtctl.stdout)?;
+        host.hardware_model = read_to_string("/sys/devices/virtual/dmi/id/board_name")?.trim().to_string();
         Ok(host)
     }
     #[cfg(feature = "posix")]
@@ -42,7 +41,7 @@ impl Host {
         use sys_info::{hostname, linux_os_release};
         use uname::Info;
 
-        let hardware_model = &read_to_string("/sys/devices/virtual/dmi/id/board_name")?.trim();
+        let hardware_model = read_to_string("/sys/devices/virtual/dmi/id/board_name")?.trim().to_string();
         let hostname = hostname()?;
         let info = linux_os_release()?;
         let uname = Info::new()?;
@@ -51,7 +50,7 @@ impl Host {
             hostname,
             operating_system_pretty_name: info.pretty_name().to_string(),
             kernel_release: uname.release,
-            hardware_model: hardware_model.to_string(),
+            hardware_model,
         })
     }
 
