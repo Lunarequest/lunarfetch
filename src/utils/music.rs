@@ -24,6 +24,7 @@ async fn music_from_bus(interface: OwnedBusName, connection: Connection) -> Resu
         .get("xesam:title")
         .context("no title, this shouldn't be possible")?
         .try_into()?;
+
     Ok(title)
 }
 
@@ -34,9 +35,7 @@ pub async fn get_song_dbus() -> Result<String> {
     let m = proxy.list_names().await?;
     let filtered_m = m
         .into_iter()
-        .filter(|e| {
-            e.contains("org.mpris.MediaPlayer2.") && (!e.contains("chrom") || !e.contains("kde"))
-        })
+        .filter(|e| e.contains("org.mpris.MediaPlayer2."))
         .collect::<Vec<OwnedBusName>>();
 
     if filtered_m.len() > 1 {
