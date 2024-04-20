@@ -19,12 +19,10 @@ async fn music_from_bus(interface: OwnedBusName, connection: Connection) -> Resu
 
     let seralised_body: Value = body.deserialize()?;
     let maped_body: HashMap<String, Value> = seralised_body.try_into()?;
-
     let title: String = maped_body
         .get("xesam:title")
         .context("no title, this shouldn't be possible")?
         .try_into()?;
-
     Ok(title)
 }
 
