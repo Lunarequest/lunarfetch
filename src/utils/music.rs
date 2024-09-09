@@ -1,8 +1,22 @@
+use core::fmt;
 use std::collections::HashMap;
 
 use anyhow::{Context, Result};
 use zbus::{fdo::DBusProxy, names::OwnedBusName, Connection};
-use zvariant::Value;
+use zvariant::{Array, Value};
+
+#[derive(Debug)]
+pub struct Music {
+    title: String,
+    artist: String,
+    album: String,
+}
+
+impl fmt::Display for Music {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} - {} - {}", self.title, self.album, self.artist)
+    }
+}
 
 async fn music_from_bus(interface: OwnedBusName, connection: Connection) -> Result<String> {
     let message = connection
@@ -16,6 +30,11 @@ async fn music_from_bus(interface: OwnedBusName, connection: Connection) -> Resu
         .await?;
 
     let body = message.body();
+    let mut muisc = Music {
+        title: "Unknown Song".into(),
+        artist: "Unknown Artist".into(),
+        album: "Unknown Album".into(),
+    };
 
     let seralised_body: Value = body.deserialize()?;
     let maped_body: HashMap<String, Value> = seralised_body.try_into()?;
@@ -23,7 +42,28 @@ async fn music_from_bus(interface: OwnedBusName, connection: Connection) -> Resu
         .get("xesam:title")
         .context("no title, this shouldn't be possible")?
         .try_into()?;
-    Ok(title)
+    muisc.title = title;
+
+    let album = maped_body
+        .get("xesam:album")
+        .and_then(|v| v.try_into().ok())
+        .unwrap_or_else(|| "Unknown album".to_string());
+    muisc.album = album;
+
+    let artist = maped_body
+        .get("xesam:artist")
+        .and_then(|v| TryInto::<Array>::try_into(v).ok())
+        .map(|array| {
+            array
+                .iter()
+                .filter_map(|v| TryInto::<String>::try_into(v).ok())
+                .collect::<Vec<_>>()
+                .join(" & ")
+        })
+        .unwrap_or_else(|| "Unknown artist".to_string());
+    muisc.artist = artist;
+
+    Ok(muisc.to_string())
 }
 
 pub async fn get_song_dbus() -> Result<String> {
@@ -33,10 +73,10 @@ pub async fn get_song_dbus() -> Result<String> {
     let m = proxy.list_names().await?;
     let filtered_m = m
         .into_iter()
-        .filter(|e| e.contains("org.mpris.MediaPlayer2."))
+        .filter(|e| e.contains("org.mpris.MediaPlayer2.") && !e.contains("chromium"))
         .collect::<Vec<OwnedBusName>>();
 
-    if filtered_m.len() > 1 {
+    if !filtered_m.is_empty() {
         for bus in filtered_m {
             let music = music_from_bus(bus, connection.clone()).await?;
             if music.len() > 2 {
