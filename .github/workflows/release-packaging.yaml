@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: install deps
-        run: apk update && apk upgrade && apk add musl-dev nodejs npm
+        run: apk update && apk upgrade && apk add musl-dev nodejs npm tar
 
       - uses: Swatinem/rust-cache@v2
 
