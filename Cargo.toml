@@ -11,17 +11,17 @@ systemd = ["dep:serde", "dep:serde_json"]
 posix = ["dep:uname", "dep:sys-info"]
 
 [dependencies]
-anyhow = "1.0.87"
-byte-unit = "5.1.4"
-owo-colors = { version = "4.0.0" }
+anyhow = "1.0.64"
+byte-unit = "5.1.6"
+owo-colors = { version = "4.1.0" }
 pretty-duration = "0.1.1"
-procfs = "0.16.0"
-serde = { version = "1.0.120", optional = true, features = ["derive"] }
-serde_json = { version = "1.0.128", optional = true }
+procfs = "0.17.0"
+serde = { version = "1.0.216", optional = true, features = ["derive"] }
+serde_json = { version = "1.0.133", optional = true }
 sys-info = { version = "0.9.1", optional = true }
-sysinfo = "0.31.2"
-tokio = { version = "1.40.0", features = ["full"] }
+sysinfo = "0.33.0"
+tokio = { version = "1.42.0", features = ["full"] }
 uname = { version = "0.1.1", optional = true }
 uptime_lib = "0.3.1"
-zbus = { version = "4.4.0", features = ["tokio"] }
-zvariant = "4.2.0"
+zbus = { version = "5.1.1", features = ["tokio"] }
+zvariant = "5.1.0"

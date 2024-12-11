@@ -17,27 +17,22 @@ jobs:
       PROJECT_NAME: lunarfetch
     runs-on: ubuntu-latest
     container:
-      image: alpine:edge
-    strategy:
-      fail-fast: true
-      matrix:
-        target: [x86_64-unknown-linux-musl] #TODO: add support for aarch64 builds
+      image: rust:alpine
     steps:
       - uses: actions/checkout@v4
       - name: install deps
-        run: apk update && apk upgrade && apk add musl-dev rustup gcc
-      - name: add toolchain
-        run: rustup-init --target ${{ matrix.target }} -y
+        run: apk update && apk upgrade && apk add musl-dev nodejs npm
+
       - uses: Swatinem/rust-cache@v2
 
       - name: Release Build
-        run: . $HOME/.cargo/env && cargo build --release --target ${{ matrix.target }}
+        run: cargo build --release
 
       - uses: actions/upload-artifact@v3
         if: github.ref == 'refs/heads/mistress'
         with:
-          name: ${{ env.PROJECT_NAME }}-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/${{ env.PROJECT_NAME }}
+          name: lunarfetch
+          path: target/release/lunarfetch
 
       - name: Publish
         id: publishing
@@ -45,5 +40,5 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         with:
           files: |
-            target/${{ matrix.target }}/release/${{ env.PROJECT_NAME }}
+            target/release/lunarfetch
           draft: true
