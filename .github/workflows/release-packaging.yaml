@@ -28,7 +28,7 @@ jobs:
       - name: Release Build
         run: cargo build --release
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/mistress'
         with:
           name: lunarfetch
