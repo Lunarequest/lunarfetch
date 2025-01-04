@@ -73,7 +73,11 @@ pub async fn get_song_dbus() -> Result<String> {
     let m = proxy.list_names().await?;
     let filtered_m = m
         .into_iter()
-        .filter(|e| e.contains("org.mpris.MediaPlayer2.") && !e.contains("chromium"))
+        .filter(|e| {
+            e.contains("org.mpris.MediaPlayer2.")
+                && !e.contains("chromium")
+                && !e.contains("kdeconnect")
+        })
         .collect::<Vec<OwnedBusName>>();
 
     if !filtered_m.is_empty() {
