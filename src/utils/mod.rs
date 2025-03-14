@@ -5,7 +5,7 @@ pub mod package_managers;
 pub mod ps;
 pub mod which;
 
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::env::var;
 
 pub fn desktop_env() -> Result<String> {

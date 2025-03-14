@@ -1,31 +1,42 @@
-use anyhow::{anyhow, Result};
+use anyhow::{Result, anyhow};
 use std::{
-    fs::{read_to_string, File},
+    fs::{File, read_to_string},
     io::{BufRead, BufReader},
     process::id,
 };
 
-pub fn terminal() -> Result<String> {
+pub fn terminal() -> String {
     let pid = id();
-    let pids = get_parent_pids(pid)?;
+    let pids = get_parent_pids(pid).unwrap_or_default();
     if pids.is_empty() {
-        return Err(anyhow!("fiailed to get parent pid for terminal detection"));
+        return "Unknown Terminal".into();
     }
-    for pid in pids {
-        match get_pid_name(&pid)?.as_str() {
-            "wezterm-gui" => return Ok(String::from("wezterm")),
-            "code" => return Ok(String::from("vscode")),
-            "code-insiders" => return Ok(String::from("vscode insiders")),
-            "konsole" => return Ok(String::from("konsole")),
-            "kitty" => return Ok(String::from("kitty")),
-            "sshd" => return Ok(String::from("ssh")),
-            _ => continue,
+    for pid in &pids {
+        match get_pid_name(pid) {
+            Ok(pname) => match pname.as_str() {
+                "ghostty" => return "Ghostty".into(),
+                "wezterm-gui" => return "Wezterm".into(),
+                "code" => return "Vscode".into(),
+                "code-insiders" => return "Vscode Insiders".into(),
+                "konsole" => return "Konsole".into(),
+                "kitty" => return "Kitty".into(),
+                "sshd" => return "SSH session".into(),
+                _ => continue,
+            },
+            Err(_e) => {
+                #[cfg(debug_assertions)]
+                println!("{_e}");
+            }
         }
     }
-
-    Err(anyhow!(
-        "anyhow could not match parents to any known terminal"
-    ))
+    if pids.is_empty() {
+        "Unknown Terminal".into()
+    } else {
+        match get_pid_name(&pid) {
+            Ok(name) => name,
+            Err(_) => "Unknown Terminal".into(),
+        }
+    }
 }
 
 fn get_parent_pid(pid: u32) -> Result<u32> {
