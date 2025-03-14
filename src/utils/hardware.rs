@@ -1,4 +1,7 @@
 use byte_unit::{Byte, Unit};
+use owo_colors::OwoColorize;
+use pci_ids::Device;
+use pci_info::PciInfo;
 use procfs::{Current, Meminfo};
 use sysinfo::System;
 
@@ -34,4 +37,44 @@ pub fn cpu() -> String {
     sys.refresh_all();
     let cpus = sys.cpus();
     cpus[0].brand().into()
+}
+
+pub fn gpu() -> String {
+    let info = PciInfo::enumerate_pci().unwrap();
+    let gpus: Vec<String> = info
+        .iter()
+        .filter(|d| match d {
+            Ok(device) => {
+                if device.device_class_code().unwrap() == 0x03 {
+                    match Device::from_vid_pid(device.vendor_id(), device.device_id()) {
+                        Some(_) => {
+                            return true;
+                        }
+                        None => {
+                            return false;
+                        }
+                    }
+                }
+                return false;
+            }
+            Err(_error) => {
+                return false;
+            }
+        })
+        .map(|d| {
+            if let Ok(device) = d {
+                if let Some(dev) = Device::from_vid_pid(device.vendor_id(), device.device_id()) {
+                    return format!(
+                        "{}  {} -> {}",
+                        "                                          ",
+                        "GPU".purple(),
+                        dev.name()
+                    );
+                };
+            }
+            return "this shouldn't be possible".to_string();
+        })
+        .collect();
+
+    gpus.join("\n")
 }

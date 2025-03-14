@@ -17,9 +17,10 @@ pub async fn render(
     music: String,
     cpu: String,
     ram: String,
+    gpus: String,
 ) -> Result<()> {
     let desktop = desktop_env()?;
-    let terminal = terminal()?;
+    let terminal = terminal();
     let user = env::var("USER")?;
     let binding = env::var("SHELL")?;
     let shell = binding.split('/').last().context("bash shell")?;
@@ -47,6 +48,7 @@ pub async fn render(
               {} {} -> {}
               {} {} -> {}
 {}  {} -> {}
+{}
 ",
         "▀▀▀▀▀▀▀".bright_red(),
         "▀▀▀▀▀▀▀▀▀▘".white(),
@@ -105,7 +107,8 @@ pub async fn render(
         cpu,
         "                                          ",
         "Memory".purple(),
-        ram
+        ram,
+        gpus
     );
     println!("{logo}");
     println!("{blocks}");
