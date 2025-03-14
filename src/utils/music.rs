@@ -2,7 +2,7 @@ use core::fmt;
 use std::collections::HashMap;
 
 use anyhow::{Context, Result};
-use zbus::{fdo::DBusProxy, names::OwnedBusName, Connection};
+use zbus::{Connection, fdo::DBusProxy, names::OwnedBusName};
 use zvariant::{Array, Value};
 
 #[derive(Debug)]

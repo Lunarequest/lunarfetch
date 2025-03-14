@@ -1,27 +1,22 @@
 [package]
 name = "lunarfetch"
-version = "0.1.4"
-edition = "2021"
+version = "0.1.5"
+edition = "2024"
 resolver = "2"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-[features]
-default = ["systemd"]
-systemd = ["dep:serde", "dep:serde_json"]
-posix = ["dep:uname", "dep:sys-info"]
-
 [dependencies]
-anyhow = "1.0.95"
+anyhow = "1.0.97"
 byte-unit = "5.1.6"
-owo-colors = { version = "4.1.0" }
+owo-colors = { version = "4.2.0" }
+pci-ids = "0.2.5"
+pci-info = "0.3.0"
 pretty-duration = "0.1.1"
 procfs = "0.17.0"
-serde = { version = "1.0.217", optional = true, features = ["derive"] }
-serde_json = { version = "1.0.134", optional = true }
-sys-info = { version = "0.9.1", optional = true }
+sys-info = { version = "0.9.1" }
 sysinfo = "0.33.1"
-tokio = { version = "1.42.0", features = ["full"] }
-uname = { version = "0.1.1", optional = true }
+tokio = { version = "1.44.0", features = ["full"] }
+uname = { version = "0.1.1" }
 uptime_lib = "0.3.1"
-zbus = { version = "5.2.0", features = ["tokio"] }
-zvariant = "5.1.0"
+zbus = { version = "5.5.0", features = ["tokio"] }
+zvariant = "5.4.0"
