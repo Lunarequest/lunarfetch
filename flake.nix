@@ -45,7 +45,7 @@
           lunarfetch = naersk.lib.${system}.buildPackage {
             pname = "lunarfetch";
             root = ./.;
-            nativeBuildInputs = with pkgs; [llvmPackages_16.libcxxClang mold];
+            nativeBuildInputs = with pkgs; [llvmPackages_21.libcxxClang mold];
           };
 
           default = lunarfetch;
